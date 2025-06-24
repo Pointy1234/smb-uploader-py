@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  smb-processor:
+    build: .
+    container_name: smb-file-processor
+    ports:
+      - "3000:3000"
+    environment:
+      - SMB_HOST=${SMB_HOST}
+      - SMB_SHARE=${SMB_SHARE}
+      - SMB_USERNAME=${SMB_USERNAME}
+      - SMB_PASSWORD=${SMB_PASSWORD}
+      - SMB_DOMAIN=${SMB_DOMAIN:-WORKGROUP}
+      - API_URL=${API_URL}
+      - PORT=3000
+      - SMB_INPUT_DIR=${SMB_INPUT_DIR:-input}
+      - SMB_OUTPUT_DIR=${SMB_OUTPUT_DIR:-output}
+    restart: unless-stopped
+    networks:
+      - smb-network
+    # Если нужно монтировать локальные директории для конфигурации
+    # volumes:
+    #   - ./config:/app/config
+
+networks:
+  smb-network:
+    driver: bridge
